@@ -30,7 +30,8 @@ const ChatBot: React.FC = () => {
   const flatListRef = useRef<FlatList>(null);
 
   // const API_URL = "http://192.168.0.3:3000/api/chatbot/chat";
-  const API_URL = "http://192.168.100.45:3000/api/chatbot/chat";
+   const API_URL = "http://192.168.100.17:3000/api/chatbot/chat";
+  //const API_URL = "http://192.168.100.169:3000/api/chatbot/chat";
 
   // Auto scroll to bottom when messages change
   useEffect(() => {

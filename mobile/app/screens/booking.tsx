@@ -85,7 +85,7 @@ export default function BookingScreen() {
       doctorName: selectedDoctor.name,
       date: selectedDate,
       time: selectedTime,
-      status: "pending",
+      status: "upcoming",
     };
   
     try {

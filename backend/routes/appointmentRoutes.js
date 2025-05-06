@@ -5,6 +5,9 @@ const appointmentController = require("../controllers/appointmentController");
 // POST - Create a new appointment
 router.post("/", appointmentController.createAppointment);
 
+// GET
+router.get("/all", appointmentController.getAllAppointments)
+
 // GET - Get all appointments for a specific user
 router.get("/user/:userId", appointmentController.getUserAppointments);
 

@@ -36,7 +36,7 @@ export interface Appointment {
   doctorName: string; // Added doctor name
   date: string;
   time: string;
-  status: "pending" | "confirmed" | "cancelled";
+  status: "upcoming" | "confirmed" | "cancelled";
   createdAt?: Date;
 }
 

@@ -46,7 +46,7 @@ export default function Page() {
       </View>
 
       {/* Form */}
-      <View className="w-full space-y-6">
+      <View className="w-full space-y-6 pb-60">
         <View className="space-y-4">
           {/* Email Input */}
           <View className="space-y-2">
@@ -79,7 +79,7 @@ export default function Page() {
           </View>
 
           {/* Forgot Password */}
-          <TouchableOpacity className="items-end">
+          <TouchableOpacity className="items-end pb-4">
             <Text className="text-sm font-poppinsRegular text-green-700">
               Forgot Password?
             </Text>
@@ -103,26 +103,6 @@ export default function Page() {
               </Text>
             </TouchableOpacity>
           </LinearGradient>
-        </View>
-
-        {/* Alternative Sign In Methods */}
-        <View className="items-center space-y-6">
-          <View className="flex-row items-center w-full">
-            <View className="flex-1 h-px bg-gray-300" />
-            <Text className="mx-4 text-gray-500 font-poppinsRegular">
-              or continue with
-            </Text>
-            <View className="flex-1 h-px bg-gray-300" />
-          </View>
-
-          <View className="flex-row space-x-4">
-            <TouchableOpacity className="w-14 h-14 rounded-full bg-gray-100 items-center justify-center">
-              <Text className="text-xl">G</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="w-14 h-14 rounded-full bg-gray-100 items-center justify-center">
-              <Text className="text-xl">A</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
 

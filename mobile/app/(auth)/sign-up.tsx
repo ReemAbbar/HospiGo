@@ -182,18 +182,14 @@ export default function SignUpScreen() {
           <View className="flex-row items-center w-full">
             <View className="flex-1 h-px bg-gray-300" />
             <Text className="mx-4 text-gray-500 font-poppinsRegular">
-              or continue with
+              
             </Text>
             <View className="flex-1 h-px bg-gray-300" />
           </View>
 
           <View className="flex-row space-x-4">
-            <TouchableOpacity className="w-14 h-14 rounded-full bg-gray-100 items-center justify-center">
-              <Text className="text-xl">G</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="w-14 h-14 rounded-full bg-gray-100 items-center justify-center">
-              <Text className="text-xl">A</Text>
-            </TouchableOpacity>
+           
+            
           </View>
         </View>
       </View>

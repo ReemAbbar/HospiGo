@@ -35,7 +35,7 @@ exports.createAppointment = async (req, res) => {
     if (existingAppointment) {
       return res.status(400).json({
         success: false,
-        message: "You already have an appointment at this time",
+        message: "This appointment has already been booked!",
       });
     }
 
@@ -217,6 +217,52 @@ exports.deleteAppointment = async (req, res) => {
       success: false,
       message: "Server error",
       error: error.message,
+    });
+  }
+};
+
+// Get all appointments
+exports.getAllAppointments = async (req, res) => {
+  try {
+    console.log("getAllAppointments called with query params:", req.query);
+    
+    // Optional query parameters for filtering
+    const { status, hospitalId, doctorId, date } = req.query;
+    
+    // Build filter object
+    const filter = {};
+    
+    // Add filters if provided
+    if (status) filter.status = status;
+    if (hospitalId) filter.hospitalId = hospitalId;
+    if (doctorId) filter.doctorId = doctorId;
+    if (date) filter.date = date;
+    
+    console.log("Applying filter:", filter);
+    
+    // Get all appointments with optional filters
+    const appointments = await Appointment.find(filter).sort({
+      date: 1,
+      time: 1,
+    }); // Sort by date and time ascending
+    
+    console.log(`Found ${appointments.length} appointments`);
+    
+    res.status(200).json({
+      success: true,
+      count: appointments.length,
+      data: appointments,
+    });
+  } catch (error) {
+    console.error("Error details:", error);
+    console.error("Error name:", error.name);
+    console.error("Error message:", error.message);
+    console.error("Stack trace:", error.stack);
+    
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      errorDetails: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };

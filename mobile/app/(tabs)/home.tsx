@@ -9,19 +9,36 @@ import {
   FlatList,
   Dimensions,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { hospitals } from "../data/hospitals";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
 
+// Define a type for user roles
+type UserRole = "admin" | "user";
+
 export default function Home() {
   const { signOut } = useAuth();
   const { isLoaded, isSignedIn, user } = useUser();
   const [searchInput, setSearchInput] = useState("");
+  const [userRole, setUserRole] = useState<UserRole>("user");
+
+  // Check if user is admin using Clerk's public metadata
+  useEffect(() => {
+    if (isLoaded && isSignedIn && user) {
+      // Check the public metadata for the user role
+      const userPublicMetadata = user.publicMetadata;
+      const isAdmin = userPublicMetadata?.role === "admin";
+      setUserRole(isAdmin ? "admin" : "user");
+      
+      console.log("User role:", isAdmin ? "admin" : "user");
+    }
+  }, [isLoaded, isSignedIn, user]);
 
   const sliderList = [
     {
@@ -61,6 +78,19 @@ export default function Home() {
     </TouchableOpacity>
   );
 
+  // Admin-specific functionalities
+  const handleAddHospital = () => {
+    // router.push("/screens/add-hospital");
+  };
+
+  const handleManageUsers = () => {
+    // router.push("/screens/manage-users");
+  };
+
+  const handleViewAnalytics = () => {
+    // router.push("/screens/analytics");
+  };
+
   if (!isLoaded || !isSignedIn) {
     return null;
   }
@@ -76,81 +106,129 @@ export default function Home() {
   };
 
   return (
-    <View className="mx-5">
-      {/* Header */}
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 7,
-          alignItems: "center",
-        }}
-        className="mt-20 justify-between"
-      >
-        <View className="flex-row gap-2 items-center">
-          <Image
-            source={{ uri: user.imageUrl }}
-            style={{ width: 45, height: 45, borderRadius: 99 }}
-          />
-          <View>
-            <Text>Hello, </Text>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {user.fullName}
-            </Text>
+    <ScrollView>
+      <View className="mx-5">
+        {/* Header */}
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 7,
+            alignItems: "center",
+          }}
+          className="mt-4 justify-between"
+        >
+          <View className="flex-row gap-2 items-center">
+            <Image
+              source={{ uri: user.imageUrl }}
+              style={{ width: 45, height: 45, borderRadius: 99 }}
+            />
+            <View>
+              <Text>Hello, </Text>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {user.fullName}
+              </Text>
+              {userRole === "admin" && (
+                <Text style={{ color: "#FF5722", fontWeight: "500" }}>
+                  Administrator
+                </Text>
+              )}
+            </View>
+          </View>
+          <View className="flex-row gap-2">
+            <LinearGradient
+              colors={["#89cff0", "#ff7276", "#b19cd9", "#ffb6c1"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                padding: 10,
+                borderRadius: 20,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <MaterialCommunityIcons name="robot-happy" size={20} color="white" />
+              <TouchableOpacity onPress={() => router.push("/screens/chatbot")}>
+                <Text className="text-white font-bold">AI Assistant</Text>
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
         </View>
-        <LinearGradient
-          colors={["#89cff0", "#ff7276", "#b19cd9", "#ffb6c1"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={{
-            padding: 10,
-            borderRadius: 20,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <MaterialCommunityIcons name="robot-happy" size={20} color="white" />
-          <TouchableOpacity onPress={() => router.push("/screens/chatbot")}>
-            <Text className="text-white font-bold">AI Assistant</Text>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
 
-      {/* Slider */}
-      <View className="mt-12">
-        <FlatList
-          data={sliderList}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <Image
-              source={{ uri: item.imageUrl }}
-              style={{
-                width: Dimensions.get("screen").width * 0.9,
-                height: 170,
-                borderRadius: 10,
-                margin: 2,
-              }}
-            />
-          )}
-        />
-      </View>
+        {/* Admin Panel - Only visible to admins */}
+        {userRole === "admin" && (
+          <View style={styles.adminPanel}>
+            <Text style={styles.adminPanelTitle}>Admin Dashboard</Text>
+            <View style={styles.adminButtons}>
+              <TouchableOpacity
+                style={styles.adminButton}
+                onPress={handleAddHospital}
+              >
+                <Ionicons name="add-circle-outline" size={24} color="#FFFFFF" />
+                <Text style={styles.adminButtonText}>Add Hospital</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={styles.adminButton}
+                onPress={handleManageUsers}
+              >
+                <Ionicons name="people-outline" size={24} color="#FFFFFF" />
+                <Text style={styles.adminButtonText}>Manage Users</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={styles.adminButton}
+                onPress={handleViewAnalytics}
+              >
+                <Ionicons name="stats-chart-outline" size={24} color="#FFFFFF" />
+                <Text style={styles.adminButtonText}>Analytics</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
-      {/* Hospitals */}
-      <View className="mt-8">
-        <Text className="text-3xl font-bold">Hospitals</Text>
-        <FlatList
-          data={hospitals}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderHospitalItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-        />
+        {/* Slider - Show for all users */}
+        <View className="mt-8">
+          <FlatList
+            data={sliderList}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <Image
+                source={{ uri: item.imageUrl }}
+                style={{
+                  width: Dimensions.get("screen").width * 0.9,
+                  height: 170,
+                  borderRadius: 10,
+                  margin: 2,
+                }}
+              />
+            )}
+          />
+        </View>
+
+        {/* Hospitals */}
+        <View className="mt-8 mb-8">
+          <View style={styles.sectionHeader}>
+            <Text className="text-3xl font-bold">Hospitals</Text>
+            {userRole === "admin" && (
+              <TouchableOpacity onPress={handleAddHospital}>
+                <Ionicons name="add-circle" size={28} color="#FF5722" />
+              </TouchableOpacity>
+            )}
+          </View>
+          <FlatList
+            data={hospitals}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderHospitalItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -168,10 +246,10 @@ const styles = StyleSheet.create({
   },
   signOutButton: {
     backgroundColor: "#FF3B30",
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    marginTop: 20,
+    padding: 10,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     color: "white",
@@ -230,5 +308,41 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 16,
+  },
+  adminPanel: {
+    backgroundColor: "#E3F2FD",
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+  },
+  adminPanelTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1565C0",
+    marginBottom: 12,
+  },
+  adminButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  adminButton: {
+    backgroundColor: "#1565C0",
+    borderRadius: 8,
+    padding: 12,
+    alignItems: "center",
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  adminButtonText: {
+    color: "white",
+    marginTop: 4,
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
   },
 });
