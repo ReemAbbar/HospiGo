@@ -78,19 +78,6 @@ export default function Home() {
     </TouchableOpacity>
   );
 
-  // Admin-specific functionalities
-  const handleAddHospital = () => {
-    // router.push("/screens/add-hospital");
-  };
-
-  const handleManageUsers = () => {
-    // router.push("/screens/manage-users");
-  };
-
-  const handleViewAnalytics = () => {
-    // router.push("/screens/analytics");
-  };
-
   if (!isLoaded || !isSignedIn) {
     return null;
   }
@@ -160,31 +147,6 @@ export default function Home() {
         {userRole === "admin" && (
           <View style={styles.adminPanel}>
             <Text style={styles.adminPanelTitle}>Admin Dashboard</Text>
-            <View style={styles.adminButtons}>
-              <TouchableOpacity
-                style={styles.adminButton}
-                onPress={handleAddHospital}
-              >
-                <Ionicons name="add-circle-outline" size={24} color="#FFFFFF" />
-                <Text style={styles.adminButtonText}>Add Hospital</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={styles.adminButton}
-                onPress={handleManageUsers}
-              >
-                <Ionicons name="people-outline" size={24} color="#FFFFFF" />
-                <Text style={styles.adminButtonText}>Manage Users</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={styles.adminButton}
-                onPress={handleViewAnalytics}
-              >
-                <Ionicons name="stats-chart-outline" size={24} color="#FFFFFF" />
-                <Text style={styles.adminButtonText}>Analytics</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         )}
 
@@ -212,11 +174,6 @@ export default function Home() {
         <View className="mt-8 mb-8">
           <View style={styles.sectionHeader}>
             <Text className="text-3xl font-bold">Hospitals</Text>
-            {userRole === "admin" && (
-              <TouchableOpacity onPress={handleAddHospital}>
-                <Ionicons name="add-circle" size={28} color="#FF5722" />
-              </TouchableOpacity>
-            )}
           </View>
           <FlatList
             data={hospitals}
