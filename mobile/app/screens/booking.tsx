@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   doctorCard: {
-    width: 140,
+    width: 200,
     borderRadius: 12,
     backgroundColor: "#FFFFFF",
     marginRight: 12,
