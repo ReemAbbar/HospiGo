@@ -26,7 +26,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 // Define the possible status options
-type AppointmentStatus = "pending" | "confirmed" | "cancelled";
+type AppointmentStatus = "upcoming" | "cancelled";
 
 export default function AppointmentsScreen() {
   const { userId } = useAuth();
@@ -179,29 +179,6 @@ export default function AppointmentsScreen() {
     );
   };
 
-  // Admin function to update appointment status
-  // const handleUpdateStatus = async (appointmentId: string, newStatus: AppointmentStatus) => {
-  //   if (!isAdmin) return;
-    
-  //   try {
-  //     await updateAppointmentStatus(appointmentId, newStatus);
-      
-  //     // // Update local state
-  //     // setAppointments((prev) =>
-  //     //   prev.map((app) =>
-  //     //     app._id === appointmentId
-  //     //       ? { ...app, status: newStatus }
-  //     //       : app
-  //     //   )
-  //     // );
-      
-  //     Alert.alert("Success", `Appointment status updated to ${newStatus}`);
-  //   } catch (error) {
-  //     console.error("Error updating appointment status:", error);
-  //     Alert.alert("Error", "Failed to update appointment status");
-  //   }
-  // };
-
   const renderAppointmentItem = ({ item }: { item: Appointment }) => {
     // Format the date for display
     const displayDate = new Date(item.date).toLocaleDateString("en-US", {
@@ -239,7 +216,7 @@ export default function AppointmentsScreen() {
             <View style={styles.detailItem}>
               <FontAwesome6 name="user" size={18} color="#666" />
               <Text style={styles.detailText}>
-                <Text style={styles.detailLabel}>Patient: </Text>
+                <Text style={styles.detailLabel}>Patient ID: </Text>
                 {item.userId}
               </Text>
             </View>
@@ -312,20 +289,11 @@ export default function AppointmentsScreen() {
         </TouchableOpacity>
         
         <TouchableOpacity
-          style={[styles.filterButton, statusFilter === "pending" && styles.activeFilter]}
-          onPress={() => setStatusFilter("pending")}
+          style={[styles.filterButton, statusFilter === "upcoming" && styles.activeFilter]}
+          onPress={() => setStatusFilter("upcoming")}
         >
-          <Text style={[styles.filterText, statusFilter === "pending" && styles.activeFilterText]}>
-            Pending
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[styles.filterButton, statusFilter === "confirmed" && styles.activeFilter]}
-          onPress={() => setStatusFilter("confirmed")}
-        >
-          <Text style={[styles.filterText, statusFilter === "confirmed" && styles.activeFilterText]}>
-            Confirmed
+          <Text style={[styles.filterText, statusFilter === "upcoming" && styles.activeFilterText]}>
+            Upcoming
           </Text>
         </TouchableOpacity>
         
@@ -467,7 +435,7 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 4,
     marginTop: 12,
   },
   filterButton: {

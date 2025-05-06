@@ -8,7 +8,7 @@ export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
 
-  const [fullName, setFullName] = React.useState(""); // Add state for full name
+  const [fullName, setFullName] = React.useState("");
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [pendingVerification, setPendingVerification] = React.useState(false);
@@ -19,9 +19,12 @@ export default function SignUpScreen() {
     if (!isLoaded) return;
 
     try {
+      // Create the user with email and password
       await signUp.create({
         emailAddress,
         password,
+        firstName: fullName.split(" ")[0],
+        lastName: fullName.split(" ").slice(1).join(" "),
       });
 
       // Send user an email with verification code
@@ -62,14 +65,14 @@ export default function SignUpScreen() {
             <Text className="font-poppinsMedium text-2xl text-gray-800">
               Verify Your Email
             </Text>
-            <Text className="font-poppinsRegular text-gray-500 text-center">
+            <Text className="font-poppinsRegular text-gray-500 text-center mb-6">
               Please enter the verification code sent to {emailAddress}
             </Text>
           </View>
 
           <View className="space-y-6">
             <TextInput
-              className="bg-gray-100 rounded-xl p-4 text-center font-poppinsRegular text-gray-800 text-xl tracking-wider"
+              className="bg-gray-100 rounded-xl p-4 text-center font-poppinsRegular text-gray-800 text-xl tracking-wider mb-4"
               value={code}
               placeholder="Enter verification code"
               placeholderTextColor="#9CA3AF"
@@ -93,17 +96,6 @@ export default function SignUpScreen() {
               </TouchableOpacity>
             </LinearGradient>
           </View>
-
-          <View className="items-center pt-4">
-            <Text className="text-gray-500 font-poppinsRegular">
-              Didn't receive a code?
-            </Text>
-            <TouchableOpacity className="mt-2">
-              <Text className="text-green-700 font-poppinsMedium">
-                Resend Code
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     );
@@ -122,8 +114,22 @@ export default function SignUpScreen() {
       </View>
 
       {/* Form */}
-      <View className="w-full space-y-6">
+      <View className="w-full space-y-6 mb-40">
         <View className="space-y-4">
+          {/* Full Name Input */}
+          <View className="space-y-2">
+            <Text className="font-poppinsRegular text-gray-700 text-sm pl-1">
+              Full Name
+            </Text>
+            <TextInput
+              className="bg-gray-100 rounded-xl p-4 font-poppinsRegular text-gray-800"
+              value={fullName}
+              placeholder="Enter your full name"
+              placeholderTextColor="#9CA3AF"
+              onChangeText={(name) => setFullName(name)}
+            />
+          </View>
+
           {/* Email Input */}
           <View className="space-y-2">
             <Text className="font-poppinsRegular text-gray-700 text-sm pl-1">
@@ -152,7 +158,7 @@ export default function SignUpScreen() {
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
             />
-            <Text className="text-xs font-poppinsRegular text-gray-500 pl-1">
+            <Text className="text-xs font-poppinsRegular text-gray-500 pl-1 mb-3">
               Password must be at least 8 characters
             </Text>
           </View>
